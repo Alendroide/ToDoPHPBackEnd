@@ -16,41 +16,30 @@ switch($table){
             die(json_encode([ "message" => "400 - Method not allowed" ]));
         }
 
-        die(json_encode([ "message" => "Logged In" ]));
+        require_once __DIR__."/controllers/user.controller.php";
+            $class = new UserController;
+        die($class->login());
         break;
+    
     case 'register':
         if($method != 'POST'){
             header("HTTP/2 400");
             die(json_encode([ "message" => "400 - Method not allowed" ]));
         }
         
-        header("HTTP/2 201");
-        die(json_encode([ "message" => "Registered" ]));
+        require_once __DIR__."/controllers/user.controller.php";
+            $class = new UserController;
+        die($class->register());
         break;
+    
+    case 'tasks':
+        header("HTTP/2 404");
+        die(json_encode([ "message" => "404 - Not Found"]));
+        break;
+    
     default:
-        if(file_exists($controllerName)){
-
-            require_once $controllerName;
-            $class = new $className;
-        
-            switch($method) {
-                case 'GET':
-                    $class->getAll();
-                    break;
-                case 'POST':
-                    $class->create();
-                    break;
-                default:
-                    header("HTTP/2 400");
-                    die(json_encode([ "message" => "400 - Method not allowed"]));
-                    break;
-            }
-        
-        }
-        else{
-            header("HTTP/2 404");
-            die(json_encode([ "message" => "404 - Not Found"]));
-        }
+        header("HTTP/2 404");
+        die(json_encode([ "message" => "404 - Not Found"]));
         break;
 }
 ?>
