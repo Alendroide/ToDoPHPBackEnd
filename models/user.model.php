@@ -12,19 +12,25 @@ class UserModel{
 
     public function login($data){
         // Search user in database
-        $sql = "SELECT password FROM users WHERE username = ?";
+        $sql = "SELECT * FROM users WHERE username = ?";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(1,$data->username);
         $stmt->execute();
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         // If not found, 404
-        if(!isset($user["password"])) die(json_encode(["message" => "404 - Not Found"]));
+        if(!isset($user["password"])){
+            header("HTTP/2 404");
+            die(json_encode(["message" => "User not found"]));
+        }
         // If found, compare passwords
-        if(password_verify($data->password,$user["password"])) return true;
+        if(password_verify($data->password,$user["password"])){
+            return $user;
+        }
         
         // If the passwords don't match, return false
-        return false;
+        header("HTTP/2 403");
+        die(json_encode(["message"=>"Wrong password"]));
     }
 
     public function register($data){
