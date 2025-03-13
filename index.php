@@ -73,7 +73,9 @@ switch($table){
         if($method == 'POST'){
             $task->create($userId);
         }
-        
+        else if($method == 'GET'){
+            echo(json_encode($task->getAll($userId)));
+        }
         break;
     
     default:

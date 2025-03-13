@@ -28,11 +28,13 @@ class TaskModel{
         die(json_encode(["message"=>"Task created successfully"]));
     }
 
-    public function register($data){
+    public function getAll($userId){
         $sql = "SELECT * FROM tasks WHERE user = ?";
         $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(1,$data->user);
-        
+        $stmt->bindParam(1,$userId);
+        $stmt->execute();
+        $tasks = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $tasks; 
     }
 }
 ?>

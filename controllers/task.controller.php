@@ -24,6 +24,10 @@ class TaskController{
         $this->model->create($data);
     }
 
+    public function getAll($userId){
+        return $this->model->getAll($userId);
+    }
+
 }
 
 ?>
